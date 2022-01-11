@@ -5,16 +5,21 @@ public class Items {
     private String name;
     private int price;
     private int amount;
+    private Countries manufacturer;
 
     public Items(){
 
     }
 
-    public Items(Long id,String name, int price, int amount){
+    public Items(Long id,String name, int price, int amount, Countries manufacturer){
         this.id = id;
         this.name = name;
         this.price = price;
         this.amount = amount;
+        this.manufacturer = manufacturer;
+    }
+
+    public Items(long id, String name, int price, int amount) {
     }
 
     public Long getId(){
@@ -46,5 +51,13 @@ public class Items {
 
     public void setAmount(int amount) {
         this.amount = amount;
+    }
+
+    public Countries getManufacturer() {
+        return manufacturer;
+    }
+
+    public void setManufacturer(Countries manufacturer) {
+        this.manufacturer = manufacturer;
     }
 }

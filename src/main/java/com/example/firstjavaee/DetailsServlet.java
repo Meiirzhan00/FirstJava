@@ -13,10 +13,17 @@ public class DetailsServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        Long id = Long.parseLong(request.getParameter("id"));
+        Long id = 0L;
+
+        try {
+            id = Long.parseLong(request.getParameter("id"));
+        }catch (Exception e){
+
+        }
         Items item = DBManager.getItem(id);
 
         if (item!=null){
+
             request.setAttribute("item", item);
             request.getRequestDispatcher("/details.jsp").forward(request,response);
         }

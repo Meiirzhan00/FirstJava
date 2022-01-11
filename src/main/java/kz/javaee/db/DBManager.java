@@ -1,42 +1,224 @@
 package kz.javaee.db;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 
 public class DBManager {
 
-    private static ArrayList<Items> items = new ArrayList<>();
-
-    private static Long id = 5L;
+    private static final String url = "jdbc:mysql://localhost:3306/first_ee_db?useUnicode=true&serverTimezone=UTC";
+    private static final String user = "root";
+    private static final String password = "";
+    private static Connection connection;
 
     static {
-        items.add(new Items(1L,"Iphone XR", 640000,15));
-        items.add(new Items(2L,"Samsung A51", 120000,46));
-        items.add(new Items(3L,"OPPO A54", 145000,27));
-        items.add(new Items(4L,"Iphone 13 Pro", 750000,30));
+        try {
+
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            connection = DriverManager.getConnection(url,user,password);
+
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
-    public static void addItem(Items item){
+    public static boolean addItem(Items item){
 
-        item.setId(id);
-        items.add(item);
-        id++;
+        int rows = 0;
 
+        try {
+
+            PreparedStatement statement = connection.prepareStatement("" +
+                    "INSERT INTO items (id,name,price,amount,manufacturer_id) " +
+                    "VALUES (NULL ,?, ?, ?, ?)");
+
+            statement.setString(1,item.getName());
+            statement.setInt(2, item.getPrice());
+            statement.setInt(3,item.getAmount());
+            statement.setLong(4,item.getManufacturer().getId());
+
+            rows = statement.executeUpdate();
+            statement.close();
+
+        }catch (Exception e){
+
+            e.printStackTrace();
+        }
+
+        return rows > 0;
     }
 
     public static ArrayList<Items> getItems(){
+
+        ArrayList<Items> items = new ArrayList<>();
+
+        try {
+
+            PreparedStatement statement = connection.prepareStatement("" +
+                    "SELECT it.id, it.name, it.price, it.amount, it.manufacturer_id, c.name AS countryName, c.short_name " +
+                    "FROM items it " +
+                    "INNER JOIN countries c ON it.manufacturer_id = c.id " +
+                    "ORDER BY it.price DESC");
+
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()){
+                items.add(new Items(
+                        resultSet.getLong("id"),
+                        resultSet.getString("name"),
+                        resultSet.getInt("price"),
+                        resultSet.getInt("amount"),
+                        new Countries(
+                                resultSet.getLong("manufacturer_id"),
+                                resultSet.getString("countryName"),
+                                resultSet.getString("short_name")
+                        )
+                ));
+            }
+
+            statement.close();
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
         return items;
     }
 
     public static Items getItem(Long id){
-        for (Items it : items) {
-            if(it.getId() == id){
-                return it;
+
+        Items item = null;
+
+        try {
+            PreparedStatement statement = connection.prepareStatement("" +
+                    "SELECT it.id, it.name, it.price, it.amount, it.manufacturer_id, c.name AS countryName, c.short_name " +
+                    "FROM items it " +
+                    "INNER JOIN countries c ON it.manufacturer_id = c.id " +
+                    "WHERE it.id = ?");
+
+            statement.setLong(1,id);
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()){
+                item = new Items(
+                        resultSet.getLong("id"),
+                        resultSet.getString("name"),
+                        resultSet.getInt("price"),
+                        resultSet.getInt("amount"),
+                        new Countries(
+                                resultSet.getLong("manufacturer_id"),
+                                resultSet.getString("countryName"),
+                                resultSet.getString("short_name")
+                        )
+                );
             }
+        }catch (Exception e){
+            e.printStackTrace();
         }
-        return null;
+
+        return item;
     }
 
+    public static boolean saveItem(Items item){
 
+        int rows = 0;
 
+        try {
+
+            PreparedStatement statement = connection.prepareStatement("" +
+                    "UPDATE items SET name = ?, price = ?, amount = ?, manufacturer_id = ? " +
+                    "WHERE id = ?");
+
+            statement.setString(1,item.getName());
+            statement.setInt(2,item.getPrice());
+            statement.setInt(3,item.getAmount());
+            statement.setLong(4,item.getManufacturer().getId());
+            statement.setLong(5,item.getId());
+
+            rows = statement.executeUpdate();
+            statement.close();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return rows>0;
+    }
+
+    public static boolean deleteItem(Items item){
+
+        int rows = 0;
+
+        try {
+
+            PreparedStatement statement = connection.prepareStatement("" +
+                    "DELETE FROM items WHERE id = ?");
+
+            statement.setLong(1,item.getId());
+
+            rows = statement.executeUpdate();
+            statement.close();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return rows>0;
+    }
+
+    public static ArrayList<Countries> getCountries(){
+
+        ArrayList<Countries> countries = new ArrayList<>();
+
+        try {
+
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM countries");
+
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()){
+
+                countries.add(new Countries(
+                        resultSet.getLong("id"),
+                        resultSet.getString("name"),
+                        resultSet.getString("short_name")
+                ));
+            }
+
+            statement.close();
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return countries;
+    }
+
+    public static Countries getCountry(Long id){
+
+        Countries country = null;
+
+        try {
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM countries WHERE id = ? LIMIT 1");
+
+            statement.setLong(1,id);
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()){
+                country = new Countries(
+                        resultSet.getLong("id"),
+                        resultSet.getString("name"),
+                        resultSet.getString("short_name")
+                );
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return country;
+    }
 
 }

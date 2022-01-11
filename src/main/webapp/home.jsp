@@ -11,9 +11,6 @@
         <div class="container">
             <div class="row mt-5">
                 <div class="col-sm-12">
-                    <h4 class="mb-4">
-                        CONTENTS OF <%=siteName%>
-                    </h4>
                     <table class="table table-striped table-hover">
                         <thead>
                             <tr>
@@ -21,6 +18,7 @@
                                 <th>NAME</th>
                                 <th>PRICE</th>
                                 <th>AMOUNT</th>
+                                <th>MANUFACTURER</th>
                                 <th>DETAILS</th>
                             </tr>
                         </thead>
@@ -32,9 +30,7 @@
                         %>
                             <tr>
                                 <td>
-                                    <%
-                                        out.print(it.getId());
-                                    %>
+                                    <%=it.getId()%>
                                 </td>
                                 <td>
                                     <%=it.getName()%>
@@ -44,6 +40,9 @@
                                 </td>
                                 <td>
                                     <%=it.getAmount()%>
+                                </td>
+                                <td>
+                                    <%=it.getManufacturer().getName() + "-" + it.getManufacturer().getShortName()%>
                                 </td>
                                 <td>
                                     <a href="${pageContext.request.contextPath}/details?id=<%=it.getId()%>" class="btn btn-info btn-sm">DETAILS</a>
