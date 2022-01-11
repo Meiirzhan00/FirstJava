@@ -1,5 +1,5 @@
-<%@ page import="kz.javaee.db.Items" %>
 <%@ page import="java.util.ArrayList" %>
+<%@ page import="kz.javaee.db.Countries" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
     <head>
@@ -22,6 +22,17 @@
                     <%
                         }
                     %>
+                    <%
+                        String error = request.getParameter("error");
+                        if (error != null){
+                    %>
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        Something went wrong!
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    <%
+                        }
+                    %>
                     <form action="additem" method="post">
                         <div class="form-group">
                             <label>
@@ -29,19 +40,39 @@
                             </label>
                             <input type="text" name="name" class="form-control">
                         </div>
-                        <div class="form-group">
+                        <div class="form-group mt-3">
                             <label>
                                 AMOUNT :
                             </label>
                             <input type="number" name="amount" class="form-control">
                         </div>
-                        <div class="form-group">
+                        <div class="form-group mt-3">
                             <label>
                                 PRICE :
                             </label>
                             <input type="number" name="price" class="form-control">
                         </div>
-                        <div class="form-group">
+                        <div class="form-group mt-3">
+                            <label>
+                                MANUFACTURER :
+                            </label>
+                            <select class="form-control" name="manufacturer_id">
+                                <%
+                                    // ArrayList<Countries> countries = (ArrayList<Countries>) request.getAttribute("countries");
+                                    ArrayList<Countries> countries = (ArrayList<Countries>) request.getAttribute("countries");
+                                    if (countries != null){
+                                        for (Countries c : countries) {
+                                %>
+                                <option value="<%=c.getId()%>">
+                                    <%=c.getName() + "/" + c.getShortName()%>
+                                </option>
+                                <%
+                                        }
+                                    }
+                                %>
+                            </select>
+                        </div>
+                        <div class="form-group mt-3">
                             <button class="btn btn-success">ADD ITEM</button>
                         </div>
                     </form>

@@ -1,19 +1,16 @@
 <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #782b3d;">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="/">FACEBOOK KZ</a>
+    <div class="container-xxl">
+        <a class="navbar-brand" href="/">hf</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link" href="additem">Add Item</a>
+                    <a class="nav-link active" aria-current="page" href="/">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="cookies">Cookies Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="sessions">Sessions Home</a>
+                    <a class="nav-link" href="/additem">Add Item</a>
                 </li>
             </ul>
             <form class="d-flex">

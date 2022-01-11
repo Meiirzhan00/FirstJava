@@ -20,14 +20,15 @@
                             <%=item.getName()%>
                         </h1>
                         <p class="lead">
-                            PRICE : <%=item.getPrice()%> USD
+                            PRICE : <%=item.getPrice()%> USD <br>
+                            MANUFACTURER : <%=item.getManufacturer().getName() + " - " + item.getManufacturer().getShortName()%>
                         </p>
                         <hr class="my-4">
                         <p>
                             AMOUNT : <%=item.getAmount()%> ITEMS
                         </p>
                         <p class="lead">
-                            <a class="btn btn-primary btn-sm" href="#" role="button">EDIT</a>
+                            <a class="btn btn-primary btn-sm" href="${pageContext.request.contextPath}/edit?id=<%=item.getId()%>" role="button">EDIT</a>
                         </p>
                     </div>
                     <%
